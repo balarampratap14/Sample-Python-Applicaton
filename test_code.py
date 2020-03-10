@@ -12,3 +12,12 @@ class TestHello(unittest.TestCase):
         rv = self.app.get('/')
         #self.assertEqual(rv.status, '200 OK')
         self.assertEqual(rv.data, b'Hello World! Your Python Application Is succesfully Up and Running.\n Created and Written By Balaram Pratap')
+=======
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+@app.route('/hello/')
+def hello_world():
+    return 'Hello World! Your Python Application Is succesfully Up and Running.\n Created and Written By Balaram Pratap'
+
