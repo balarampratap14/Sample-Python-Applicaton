@@ -1,0 +1,147 @@
+Started by user Balaram  Pratap
+Running in Durability level: MAX_SURVIVABILITY
+[Pipeline] Start of Pipeline
+[Pipeline] stage
+[Pipeline] { (Installing Pre-requisites in Builder node)
+[Pipeline] node
+Running on Builder_1 in C:\Users\500061550\Desktop\developer\workspace\Demo_Pipeline
+[Pipeline] {
+[Pipeline] bat
+
+C:\Users\500061550\Desktop\developer\workspace\Demo_Pipeline>pip install -r pre-requiste.txt 
+Requirement already satisfied: Click==7.0 in c:\users\500061550\appdata\local\programs\python\python35\lib\site-packages (from -r pre-requiste.txt (line 1)) (7.0)
+Requirement already satisfied: Flask==1.0.2 in c:\users\500061550\appdata\local\programs\python\python35\lib\site-packages (from -r pre-requiste.txt (line 2)) (1.0.2)
+Requirement already satisfied: itsdangerous==1.1.0 in c:\users\500061550\appdata\local\programs\python\python35\lib\site-packages (from -r pre-requiste.txt (line 3)) (1.1.0)
+Requirement already satisfied: Jinja2==2.10 in c:\users\500061550\appdata\local\programs\python\python35\lib\site-packages (from -r pre-requiste.txt (line 4)) (2.10)
+Requirement already satisfied: MarkupSafe==1.1.0 in c:\users\500061550\appdata\local\programs\python\python35\lib\site-packages (from -r pre-requiste.txt (line 5)) (1.1.0)
+Requirement already satisfied: Werkzeug==0.14.1 in c:\users\500061550\appdata\local\programs\python\python35\lib\site-packages (from -r pre-requiste.txt (line 6)) (0.14.1)
+Requirement already satisfied: xmlrunner==1.7.7 in c:\users\500061550\appdata\local\programs\python\python35\lib\site-packages (from -r pre-requiste.txt (line 7)) (1.7.7)
+You are using pip version 10.0.1, however version 20.0.2 is available.
+You should consider upgrading via the 'python -m pip install --upgrade pip' command.
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Hostoing the Server in Builder node)
+[Pipeline] node
+Running on Builder_1 in C:\Users\500061550\Desktop\developer\workspace\Demo_Pipeline
+[Pipeline] {
+[Pipeline] bat
+
+C:\Users\500061550\Desktop\developer\workspace\Demo_Pipeline>start /min python.exe application.py  
+[Pipeline] bat
+
+C:\Users\500061550\Desktop\developer\workspace\Demo_Pipeline>echo 'Server Checked and It is Sucessfuly Running.' 
+'Server Checked and It is Sucessfuly Running.'
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Compiling)
+[Pipeline] node
+Running on Builder_1 in C:\Users\500061550\Desktop\developer\workspace\Demo_Pipeline
+[Pipeline] {
+[Pipeline] bat
+
+C:\Users\500061550\Desktop\developer\workspace\Demo_Pipeline>echo 'Sucessfully Compiled and Ready for Testing' 
+'Sucessfully Compiled and Ready for Testing'
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Outputs/Results)
+[Pipeline] node
+Running on Builder_1 in C:\Users\500061550\Desktop\developer\workspace\Demo_Pipeline
+[Pipeline] {
+[Pipeline] bat
+
+C:\Users\500061550\Desktop\developer\workspace\Demo_Pipeline>curl -i localhost:5000/ 
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   106  100   106    0     0    106      0  0:00:01 --:--:--  0:00:01   424
+HTTP/1.0 200 OK
+Content-Type: text/html; charset=utf-8
+Content-Length: 106
+Server: Werkzeug/0.14.1 Python/3.5.0
+Date: Wed, 11 Mar 2020 07:55:55 GMT
+
+Hello World! Your Python Application Is succesfully Up and Running.
+ Created and Written By Balaram Pratap[Pipeline] bat
+
+C:\Users\500061550\Desktop\developer\workspace\Demo_Pipeline>curl -i localhost:5000/hello/ 
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   106  100   106    0     0    106      0  0:00:01 --:--:--  0:00:01   484
+HTTP/1.0 200 OK
+Content-Type: text/html; charset=utf-8
+Content-Length: 106
+Server: Werkzeug/0.14.1 Python/3.5.0
+Date: Wed, 11 Mar 2020 07:55:56 GMT
+
+Hello World! Your Python Application Is succesfully Up and Running.
+ Created and Written By Balaram Pratap[Pipeline] bat
+
+C:\Users\500061550\Desktop\developer\workspace\Demo_Pipeline>curl -i localhost:5000/hello/Balaram_Patap 
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    56  100    56    0     0     56      0  0:00:01 --:--:--  0:00:01   239
+HTTP/1.0 200 OK
+Content-Type: text/html; charset=utf-8
+Content-Length: 56
+Server: Werkzeug/0.14.1 Python/3.5.0
+Date: Wed, 11 Mar 2020 07:55:57 GMT
+
+HEY! Hello Balaram_Patap!
+. Welcome to my UserPage.!!!!![Pipeline] }
+[Pipeline] // node
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Installing Pre-requisites in Tester node)
+[Pipeline] node
+Running on Tester_Unit_1 in C:\Users\500061550\Desktop\slave\workspace\Demo_Pipeline
+[Pipeline] {
+[Pipeline] bat
+
+C:\Users\500061550\Desktop\slave\workspace\Demo_Pipeline>pip install -r pre-requiste.txt 
+Requirement already satisfied: Click==7.0 in c:\users\500061550\appdata\local\programs\python\python35\lib\site-packages (from -r pre-requiste.txt (line 1)) (7.0)
+Requirement already satisfied: Flask==1.0.2 in c:\users\500061550\appdata\local\programs\python\python35\lib\site-packages (from -r pre-requiste.txt (line 2)) (1.0.2)
+Requirement already satisfied: itsdangerous==1.1.0 in c:\users\500061550\appdata\local\programs\python\python35\lib\site-packages (from -r pre-requiste.txt (line 3)) (1.1.0)
+Requirement already satisfied: Jinja2==2.10 in c:\users\500061550\appdata\local\programs\python\python35\lib\site-packages (from -r pre-requiste.txt (line 4)) (2.10)
+Requirement already satisfied: MarkupSafe==1.1.0 in c:\users\500061550\appdata\local\programs\python\python35\lib\site-packages (from -r pre-requiste.txt (line 5)) (1.1.0)
+Requirement already satisfied: Werkzeug==0.14.1 in c:\users\500061550\appdata\local\programs\python\python35\lib\site-packages (from -r pre-requiste.txt (line 6)) (0.14.1)
+Requirement already satisfied: xmlrunner==1.7.7 in c:\users\500061550\appdata\local\programs\python\python35\lib\site-packages (from -r pre-requiste.txt (line 7)) (1.7.7)
+You are using pip version 10.0.1, however version 20.0.2 is available.
+You should consider upgrading via the 'python -m pip install --upgrade pip' command.
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Testing in Tester Node)
+[Pipeline] node
+Running on Tester_Unit_1 in C:\Users\500061550\Desktop\slave\workspace\Demo_Pipeline
+[Pipeline] {
+[Pipeline] bat
+
+C:\Users\500061550\Desktop\slave\workspace\Demo_Pipeline>python test_code.py 
+
+Running tests...
+----------------------------------------------------------------------
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.316s
+
+OK
+
+Generating XML reports...
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] End of Pipeline
+Demo_Pipeline_1 is disabled. Triggering skipped
+Finished: SUCCESS
