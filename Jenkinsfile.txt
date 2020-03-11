@@ -1,0 +1,57 @@
+pipeline {
+  agent none
+  stages {
+    stage('Installing Pre-requisites in Builder node') {
+        agent { 
+                label 'Builder_1'
+            }
+        steps{
+            bat 'pip install -r pre-requiste.txt'
+      }
+    }
+    stage('Hostoing the Server in Builder node') {
+        agent { 
+                label 'Builder_1'
+            }
+        steps{
+            bat 'start /min python.exe application.py &'
+            bat label: '', script: 'echo \'Server Checked and It is Sucessfuly Running.\''
+      }
+    }  
+    stage('Compiling'){
+        agent { 
+                label 'Builder_1'
+            }
+        steps{
+            bat label: '', script: 'echo \'Sucessfully Compiled and Ready for Testing\''
+        }
+    }
+    stage('Outputs/Results'){
+        agent { 
+                label 'Builder_1'
+            }
+        steps{
+            bat 'curl -i localhost:5000/'
+            bat 'curl -i localhost:5000/hello/'
+            bat 'curl -i localhost:5000/hello/Balaram_Patap'
+        }
+    }
+    stage('Installing Pre-requisites in Tester node') {
+        agent { 
+                label 'Tester_Unit_1'
+            }
+        steps{
+            
+            bat 'pip install -r pre-requiste.txt'
+      }
+    }
+    stage('Testing in Tester Node') {
+        agent { 
+                label 'Tester_Unit_1'
+            }
+        steps {
+            bat 'python test_code.py'
+        }   
+    }
+  }    
+}
