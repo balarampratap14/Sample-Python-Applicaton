@@ -1,2 +1,2 @@
 # ansible
-This repository has all the configuration management roles.
+This repository has configuration management roles for deploying the application.
