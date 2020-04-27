@@ -1,0 +1,31 @@
+---
+- debug: var=ansible_all_ipv4_addresses
+
+- name: Set hostname
+  hostname: name="{{ hostname }}"
+  when: hostname is defined
+
+- name: Get hostname domain
+  command: hostname -d
+  register: ansible_domain
+  failed_when: ansible_domain.rc != 0
+
+- name: Set ansible_domain fact
+  set_fact:
+    ansible_domain: "{{ internal_domain | default(ansible_domain.stdout) }}"
+
+- name: Copy hostfile
+  template:
+    src: hosts.j2
+    dest: "/etc/hosts"
+    mode: 0644
+    backup: yes
+  when: hosts is defined
+
+- name: Configure DNS to resolve proper names.
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    mode: 0644
+    backup: yes
+  when: nameservers is defined

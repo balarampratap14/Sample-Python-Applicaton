@@ -1,0 +1,42 @@
+---
+
+- name: Copy the pre requisite package
+  copy: 
+    src: erlang-21.3.6-1.el7.x86_64.rpm
+    dest: /tmp/erlang-21.3.6-1.el7.x86_64.rpm
+
+- name: Ensure erlang is installed.
+  yum:
+    name: /tmp/erlang-21.3.6-1.el7.x86_64.rpm
+    state: present
+
+# Setup/install tasks.
+
+- include: setup.yml
+
+
+- name: Ensure rabbitmq is started and enabled (if configured).
+  service:
+    name: "{{ rabbitmq_daemon }}"
+    state: "{{ rabbitmq_state }}"
+    enabled: "{{ rabbitmq_enabled }}"
+
+- name: Ensure firewalld is installed
+  yum:
+    name: firewalld
+    state: present
+ 
+- name: Ensure firewalld is running
+  service: 
+    name: firewalld
+    state: started
+
+- name: Open Required TCP ports of RabbitMQ
+  firewalld:
+    port: "{{ item }}/tcp"
+    permanent: yes
+    state: enabled
+  with_items:
+    - 15672
+    - 5672
+    - 5671

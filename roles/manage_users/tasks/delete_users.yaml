@@ -1,0 +1,77 @@
+- name: Concatenate do not delete users list
+  set_fact:
+    skip_users_list: "{{ do_not_delete_users | join('|') }}"
+
+- name: Get a list of the all Normal users from the VM
+  shell: "eval getent passwd {$(awk '/^UID_MIN/ {print $2}' /etc/login.defs)..$(awk '/^UID_MAX/ {print $2}' /etc/login.defs)} | cut -d: -f1 | egrep -v '{{ skip_users_list }}'"
+  args:
+    executable: /bin/bash
+  changed_when: false
+  become: true
+  register: available_users
+  check_mode: no
+
+
+- name: Get a list of defined users in group_vars
+  set_fact:
+     defined_users: "{{ users | map(attribute='name') | list }}"
+
+
+- name: Delete users not defined in group vars
+  user:
+    name: "{{ item }}"
+    state: absent
+    remove: yes
+  with_items:
+      - "{{ available_users.stdout_lines }}"
+  when: "item not in defined_users"
+
+
+
+- name: Get a list of User from VM for a Component
+  shell: "eval getent passwd {$(awk '/^UID_MIN/ {print $2}' /etc/login.defs)..$(awk '/^UID_MAX/ {print $2}' /etc/login.defs)} | cut -d: -f1 | egrep -v '{{ skip_users_list }}'"
+  args:
+    executable: /bin/bash
+  changed_when: false
+  become: true
+  register: available_users_component
+
+
+- name: Create Dict and map user with servers
+  set_fact:
+    domain_accounts: "{{ domain_accounts|default({}) | combine( {item.name: item.servers} ) }}"
+  with_items:
+      -  "{{ users }}"
+
+
+- name: Display Users to be deleted
+  debug:
+    msg: "{{ domain_accounts[item.0] }} {{ item.0 }}"
+  with_nested:
+      - "{{ available_users_component.stdout_lines }}"
+      - "{{ group_names }}"
+  when:
+      -  not ansible_check_mode
+      - "item.1 not in domain_accounts[item.0]"
+      - "'all' not in domain_accounts[item.0]"
+
+- name: Pause playbook for 25 seconds
+  pause:
+    seconds: 25
+
+- name: Delete user from Component
+  user:
+    name: "{{ item.0 }}"
+    state: absent
+    remove: yes
+  with_nested:
+      - "{{ available_users_component.stdout_lines }}"
+      - "{{ group_names }}"
+  when:
+      -  not ansible_check_mode
+      - "item.1 not in domain_accounts[item.0]"
+      - "'all' not in domain_accounts[item.0]"
+
+
+
+

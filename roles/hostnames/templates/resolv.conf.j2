@@ -1,0 +1,6 @@
+{% for nameserver in nameservers %}
+nameserver {{ nameserver }}
+{% endfor %}
+{% if internal_domain is defined %}
+domain {{ internal_domain }}
+{% endif %}

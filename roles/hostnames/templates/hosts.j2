@@ -1,0 +1,9 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+{{ ansible_all_ipv4_addresses[0] }} {% if ansible_domain is defined and ansible_domain != '' %}{{ ansible_hostname }}.{{ ansible_domain }} {% endif %}{{ ansible_hostname }}
+{% for host in hosts %}
+{% if (ansible_hostname not in host.names and ansible_all_ipv4_addresses[0] not in host.ip) %}
+{{ host.ip }} {{ host.names }}
+{% endif %}
+{% endfor %}

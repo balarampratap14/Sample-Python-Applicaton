@@ -1,0 +1,49 @@
+---
+
+- name: Create User Groups
+  group: name={{ item.name }}  system=no
+  with_items:
+      - "{{ user_groups }}"
+  when: not ansible_check_mode
+  tags:
+    - add_admin
+
+- name: Add User Group to Sudoers
+  lineinfile: 'dest=/etc/sudoers.d/{{ item.name }} create=yes line="%{{ item.name  }} ALL=(ALL) NOPASSWD: ALL" state=present mode=0440'
+  with_items:
+      - "{{ user_groups }}"
+  when: item.root | bool
+  tags:
+    - add_admin
+
+
+- name: Create users
+  user:
+    name: "{{ item.0.name }}"
+    group: "{{ item.0.group }}"
+    expires: "{{ item.0.expire|default(-1) }}"
+    state: present
+    shell: /bin/bash
+  with_subelements:
+      - "{{ users }}"
+      - servers
+  when:
+      -  not ansible_check_mode
+      - "item.1 in group_names or item.1=='all'"
+  tags:
+      - add_admin
+
+- name: Add Users ssh keys
+  authorized_key: user={{ item.0.name }} key={{ lookup('file', item.0.name) }}
+  with_subelements:
+      -  "{{ users }}"
+      -   servers
+  when:
+      - not ansible_check_mode
+      - "item.1 in group_names or item.1=='all'"
+  tags:
+      - add_admin
+
+- name: delete existing users if the condition is true
+  include_tasks: delete_users.yaml
+  when: delete_existing_users | bool

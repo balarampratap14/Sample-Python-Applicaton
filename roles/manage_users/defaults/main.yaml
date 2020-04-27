@@ -1,0 +1,16 @@
+##Below list of users will not be deleted by this role
+do_not_delete_users:
+  - devopsadmin
+
+user_groups:
+  - name: devops
+    root: True
+
+users:
+  - name: devopsadmin
+    servers:
+      - all
+    group:  devops
+
+#below is a defualt value of the variable "delete_existing_users", default should be false until we update group_vars for all environments
+delete_existing_users: False
